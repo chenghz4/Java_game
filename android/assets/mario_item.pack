@@ -1,0 +1,54 @@
+
+mario_item.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mario_jump
+  rotate: false
+  xy: 1, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+mario_walk
+  rotate: false
+  xy: 103, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+superfire_jump
+  rotate: false
+  xy: 205, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+superfire_walk
+  rotate: false
+  xy: 307, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+super_jump
+  rotate: false
+  xy: 409, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+super_walk
+  rotate: false
+  xy: 511, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+Koopa Paratroopa
+  rotate: false
+  xy: 613, 57
+  size: 92, 44
+  orig: 92, 44
+  offset: 0, 0
+  index: -1
