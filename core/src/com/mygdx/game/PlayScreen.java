@@ -23,8 +23,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class PlayScreen implements Screen {
     private MyGdxGame game;
@@ -38,6 +43,11 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private Mario player;
     private TextureAtlas atlas;
+    private TextureAtlas atlas1;
+    private TextureAtlas atlas2;
+    private Worldcreater worldcreater;
+    private Array<Item> items;
+    private LinkedBlockingQueue<Itemdef> itemdefs;
 
     public PlayScreen(MyGdxGame game){
 
@@ -49,18 +59,40 @@ public class PlayScreen implements Screen {
         map=mapLoader.load("level1.tmx");
         renderer=new OrthogonalTiledMapRenderer(map,1/MyGdxGame.ppm);
         camera.position.set(viewport.getWorldWidth()/2,viewport.getWorldHeight()/2,0);
-        world=new World(new Vector2(0,-15),true);
+        world=new World(new Vector2(0,-10),true);
         box2DDebugRenderer=new Box2DDebugRenderer();
-        new Worldcreater(world,map);
-        atlas=new TextureAtlas("mario_item.pack");
-        player=new Mario(world,this);
 
+        atlas=new TextureAtlas("mario_item.pack");
+        atlas1=new TextureAtlas("items.pack");
+        atlas2=new TextureAtlas("enemy1.pack");
+        player=new Mario(this);
+        world.setContactListener(new Listener());
+        worldcreater=new Worldcreater(this);
+
+
+        items=new Array<Item>();
+        itemdefs=new LinkedBlockingQueue<Itemdef>();
     }
     @Override
     public void show() {
 
     }
 
+    public void spawnItem(Itemdef idef){
+        itemdefs.add(idef);
+
+
+    }
+
+    public void handle(){
+
+        if(!itemdefs.isEmpty()){
+            Itemdef idef=itemdefs.poll();
+            if(idef.type==Mushroom.class) {
+                items.add(new Mushroom(this, idef.position.x, idef.position.y));
+            }
+        }
+    }
     @Override
     public void render(float delta) {
         update(delta);
@@ -70,7 +102,12 @@ public class PlayScreen implements Screen {
         box2DDebugRenderer.render(world,camera.combined);
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
+
         player.draw(game.batch);
+       for(Enemies enemies:worldcreater.getGoobas())
+           enemies.draw(game.batch);
+       for(Item item:items)
+           item.draw(game.batch);
         game.batch.end();
 
        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
@@ -84,9 +121,9 @@ public class PlayScreen implements Screen {
 
 
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.W)&&player.body2.getLinearVelocity().x<=1.5){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.W)&&player.body2.getLinearVelocity().x<=2){
 
-            player.body2.applyLinearImpulse(new Vector2(0,4f),player.body2.getWorldCenter(),true);
+            player.body2.applyLinearImpulse(new Vector2(0,3f),player.body2.getWorldCenter(),true);
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.D)&& player.body2.getLinearVelocity().x<=2){
@@ -107,12 +144,32 @@ public class PlayScreen implements Screen {
         return atlas;
     }
 
+    public TextureAtlas getAtlas1(){
+
+        return atlas1;
+    }
+    public TextureAtlas getAtlas2(){
+
+        return atlas2;
+    }
 
     public void update(float dt){
         input(dt);
-
+        handle();
         world.step(1/60f,6,2);
         player.update(dt);
+        for(Enemies enemies:worldcreater.getGoobas()) {
+
+            enemies.update(dt);
+            if(enemies.getX()<player.getX()+224/MyGdxGame.ppm)
+                enemies.body2.setActive(true);
+        }
+
+        for(Item item:items) {
+            item.update(dt);
+
+        }
+
         camera.position.x=player.body2.getPosition().x;
         camera.update();
         renderer.setView(camera);
@@ -130,6 +187,14 @@ public class PlayScreen implements Screen {
     @Override
     public void pause() {
 
+    }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     @Override

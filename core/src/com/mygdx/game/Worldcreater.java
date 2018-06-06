@@ -9,10 +9,13 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class Worldcreater {
-
-    public Worldcreater(World world, TiledMap map){
+    public Array<Gooba> goobas;
+    public Worldcreater(PlayScreen screen){
+        World world=screen.getWorld();
+        TiledMap map=screen.getMap();
 
         BodyDef bodyDef=new BodyDef();
         PolygonShape shape=new PolygonShape();
@@ -39,22 +42,31 @@ public class Worldcreater {
             body=world.createBody(bodyDef);
             shape.setAsBox(rectangle.getWidth()/2/MyGdxGame.ppm,rectangle.getHeight()/2/MyGdxGame.ppm);
             fixtureDef.shape=shape;
+            fixtureDef.filter.categoryBits=MyGdxGame.objectbit;
             body.createFixture(fixtureDef);
 
         }
 
         for(MapObject object:map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
-            new Coin(world,map,rectangle);
+            new Coin(screen,object);
 
         }
 
         for(MapObject object:map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
-            new Bricks(world,map,rectangle);
+            new Bricks(screen,object);
 
         }
 
+        goobas=new Array<Gooba>();
+        for(MapObject object:map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            goobas.add(new Gooba(screen,rectangle.getX()/MyGdxGame.ppm,rectangle.getY()/MyGdxGame.ppm));
 
+        }
+
+    }
+
+    public Array<Gooba> getGoobas() {
+        return goobas;
     }
 }

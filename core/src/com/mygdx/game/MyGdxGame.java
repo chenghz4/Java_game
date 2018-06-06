@@ -12,6 +12,17 @@ public class MyGdxGame extends Game {
 	public static final int width=400;
 	public static final int height=208;
 	public static final float ppm=100;
+    public static final short debit=1;
+    public static final short mbit=2;
+    public static final short bbit=4;
+    public static final short cbit=8;
+    public static final short desbit=16;
+    public static final short enbit=32;
+    public static final short objectbit=64;
+    public static final short enheadbit=128;
+    public  static final short ibit=256;
+	public  static final short mhbit=256;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();

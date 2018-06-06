@@ -2,9 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -21,14 +24,13 @@ public class Mario extends Sprite {
     public State previousState;
     private float statetimer;
     private boolean isrunning;
-
     public World world;
     public Body body2;
     public TextureRegion mariostand;
 
-    public Mario(World world,PlayScreen screen){
+    public Mario(PlayScreen screen){
 
-        this.world=world;
+        this.world=screen.getWorld();
         currentstate=State.Standing;
         previousState=State.Standing;
         statetimer=0;
@@ -52,7 +54,7 @@ public class Mario extends Sprite {
         mariostand=new TextureRegion(screen.getAtlas().findRegion("mario_walk"),28,3,14,100);
         define();
 
-        setBounds(0,3,45/MyGdxGame.ppm,100/MyGdxGame.ppm);
+        setBounds(0,3,14/MyGdxGame.ppm,100/MyGdxGame.ppm);
         setRegion(mariostand);
 
     }
@@ -123,12 +125,19 @@ public class Mario extends Sprite {
 
         FixtureDef fixtureDef=new FixtureDef();
         CircleShape shape=new CircleShape();
-        shape.setRadius(5/MyGdxGame.ppm);
-
+        shape.setRadius(6/MyGdxGame.ppm);
+        fixtureDef.filter.categoryBits=MyGdxGame.mbit;
+        fixtureDef.filter.maskBits=MyGdxGame.debit|MyGdxGame.cbit|MyGdxGame.bbit|MyGdxGame.enbit|MyGdxGame.objectbit|MyGdxGame.enheadbit|MyGdxGame.ibit;
         fixtureDef.shape=shape;
-        body2.createFixture(fixtureDef);
+        body2.createFixture(fixtureDef).setUserData(this);
 
 
+        EdgeShape head=new EdgeShape();
+        head.set(new Vector2(-2/MyGdxGame.ppm,6/MyGdxGame.ppm),new Vector2(2/MyGdxGame.ppm,6/MyGdxGame.ppm));
+        fixtureDef.filter.categoryBits = MyGdxGame.mhbit;
+        fixtureDef.shape=head;
+        fixtureDef.isSensor=true;
+        body2.createFixture(fixtureDef).setUserData(this);
 
     }
 }
