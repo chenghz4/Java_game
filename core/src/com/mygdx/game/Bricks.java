@@ -14,7 +14,7 @@ public class Bricks extends Interact {
     }
 
     @Override
-    public void onHead() {
+    public void onHead(Mario mario) {
         setCfiter(MyGdxGame.desbit);
         getcell().setTile(null);
       //  Hud.addscore(200);

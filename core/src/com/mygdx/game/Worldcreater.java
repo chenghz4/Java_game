@@ -13,6 +13,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class Worldcreater {
     public Array<Gooba> goobas;
+    public Array<Turtles> turtles;
+    public Array<Ghost> ghost;
+
     public Worldcreater(PlayScreen screen){
         World world=screen.getWorld();
         TiledMap map=screen.getMap();
@@ -47,6 +50,18 @@ public class Worldcreater {
 
         }
 
+        for(MapObject object:map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            bodyDef.type= BodyDef.BodyType.StaticBody;
+            bodyDef.position.set((rectangle.getX()+rectangle.getWidth()/2)/MyGdxGame.ppm,(rectangle.getY()+rectangle.getHeight()/2)/MyGdxGame.ppm);
+            body=world.createBody(bodyDef);
+            shape.setAsBox(rectangle.getWidth()/2/MyGdxGame.ppm,rectangle.getHeight()/2/MyGdxGame.ppm);
+            fixtureDef.shape=shape;
+            fixtureDef.filter.categoryBits=MyGdxGame.fbit;
+            body.createFixture(fixtureDef);
+
+        }
+
         for(MapObject object:map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
             new Coin(screen,object);
 
@@ -64,9 +79,30 @@ public class Worldcreater {
 
         }
 
+        turtles =new Array<Turtles>();
+        for(MapObject object:map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            turtles.add(new Turtles(screen,rectangle.getX()/MyGdxGame.ppm,rectangle.getY()/MyGdxGame.ppm));
+
+        }
+
+        ghost =new Array<Ghost>();
+        for(MapObject object:map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            ghost.add(new Ghost(screen,rectangle.getX()/MyGdxGame.ppm,rectangle.getY()/MyGdxGame.ppm));
+
+        }
+
+
     }
 
-    public Array<Gooba> getGoobas() {
-        return goobas;
+
+    public Array<Enemies> getenemy(){
+        Array<Enemies> enemies = new Array<Enemies>();
+        enemies.addAll(goobas);
+        enemies.addAll(turtles);
+        enemies.addAll(ghost);
+        return enemies;
+
     }
 }

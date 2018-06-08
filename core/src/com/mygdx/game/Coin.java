@@ -25,12 +25,14 @@ public class Coin extends Interact {
     }
 
     @Override
-    public void onHead() {
+    public void onHead(Mario mario) {
         setCfiter(MyGdxGame.debit);
 
         if(getcell().getTile().getId()!=BLankcoin) {
             if(object.getProperties().containsKey("mushroom")) screen.spawnItem(new Itemdef(new Vector2(body.getPosition().x,body.getPosition().y+16/MyGdxGame.ppm),Mushroom.class));
-            Hud.addscore(200);
+           // Hud.addscore(200);
+            else if(object.getProperties().containsKey("flower")) screen.spawnItem(new Itemdef(new Vector2(body.getPosition().x,body.getPosition().y+16/MyGdxGame.ppm),Fireflower.class));
+            else  if(object.getProperties().containsKey("coins")) screen.spawnItem(new Itemdef(new Vector2(body.getPosition().x,body.getPosition().y+16/MyGdxGame.ppm),Coins.class));
 
         }
 

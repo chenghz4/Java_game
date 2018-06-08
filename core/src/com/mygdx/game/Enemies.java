@@ -19,7 +19,7 @@ public abstract class Enemies extends Sprite {
         this.world=screen.getWorld();
         this.screen=screen;
         setPosition(x,y);
-        speed=new Vector2(1,0);
+        speed=new Vector2(1,-1);
         define();
         body2.setActive(false);
     }

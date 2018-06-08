@@ -45,7 +45,7 @@ public abstract class Interact {
     }
 
 
-    public abstract void onHead();
+    public abstract void onHead(Mario mario);
     public void setCfiter(short fbit){
         Filter filter=new Filter();
         filter.categoryBits=fbit;

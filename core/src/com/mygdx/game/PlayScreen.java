@@ -45,10 +45,13 @@ public class PlayScreen implements Screen {
     private TextureAtlas atlas;
     private TextureAtlas atlas1;
     private TextureAtlas atlas2;
+    private TextureAtlas atlas4;
     private Worldcreater worldcreater;
     private Array<Item> items;
+    private float firetimer;
     private LinkedBlockingQueue<Itemdef> itemdefs;
-
+    public  String[] str = {"level1.tmx","level2.tmx","level3.tmx"};
+    public static int i=0;
     public PlayScreen(MyGdxGame game){
 
         this.game=game;
@@ -56,7 +59,7 @@ public class PlayScreen implements Screen {
         viewport=new StretchViewport(MyGdxGame.width/MyGdxGame.ppm,MyGdxGame.height/MyGdxGame.ppm,camera);
         hud=new Hud(game.batch);
         mapLoader=new TmxMapLoader();
-        map=mapLoader.load("level1.tmx");
+        map=mapLoader.load(str[i]);
         renderer=new OrthogonalTiledMapRenderer(map,1/MyGdxGame.ppm);
         camera.position.set(viewport.getWorldWidth()/2,viewport.getWorldHeight()/2,0);
         world=new World(new Vector2(0,-10),true);
@@ -65,6 +68,7 @@ public class PlayScreen implements Screen {
         atlas=new TextureAtlas("mario_item.pack");
         atlas1=new TextureAtlas("items.pack");
         atlas2=new TextureAtlas("enemy1.pack");
+        atlas4=new TextureAtlas("fire1.pack");
         player=new Mario(this);
         world.setContactListener(new Listener());
         worldcreater=new Worldcreater(this);
@@ -91,6 +95,12 @@ public class PlayScreen implements Screen {
             if(idef.type==Mushroom.class) {
                 items.add(new Mushroom(this, idef.position.x, idef.position.y));
             }
+            else if(idef.type==Fireflower.class) {
+                items.add(new Fireflower(this, idef.position.x, idef.position.y));
+            }
+            else if(idef.type==Coins.class) {
+                items.add(new Coins(this, idef.position.x, idef.position.y));
+            }
         }
     }
     @Override
@@ -104,40 +114,55 @@ public class PlayScreen implements Screen {
         game.batch.begin();
 
         player.draw(game.batch);
-       for(Enemies enemies:worldcreater.getGoobas())
-           enemies.draw(game.batch);
+        for(Enemies enemies:worldcreater.getenemy())
+            enemies.draw(game.batch);
        for(Item item:items)
            item.draw(game.batch);
         game.batch.end();
 
        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+        if(gameover()){
+
+            game.setScreen(new Gameover(game));
+            dispose();
+        }
+
+    }
+
+    public boolean gameover(){
+        if(player.currentstate==Mario.State.Dead&&player.getStatetimer()>2&&Hud.life<=0)
+            return true;
+        else
+            return false;
+
 
     }
 
     public void input(float dt){
-        if(Gdx.input.isTouched()){
-        camera.position.x=camera.position.x+100*dt;
+      firetimer=firetimer+(float)0.1*dt;
+      if(player.currentstate!=Mario.State.Dead) {
+          if (Gdx.input.isKeyJustPressed(Input.Keys.W) && player.body2.getLinearVelocity().x <= 2) {
 
+              player.body2.applyLinearImpulse(new Vector2(0, 3f), player.body2.getWorldCenter(), true);
+          }
 
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.W)&&player.body2.getLinearVelocity().x<=2){
+          if (Gdx.input.isKeyJustPressed(Input.Keys.D) && player.body2.getLinearVelocity().x <= 2) {
 
-            player.body2.applyLinearImpulse(new Vector2(0,3f),player.body2.getWorldCenter(),true);
-        }
+              player.body2.applyLinearImpulse(new Vector2(1f, 0), player.body2.getWorldCenter(), true);
+          }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.D)&& player.body2.getLinearVelocity().x<=2){
+          if (Gdx.input.isKeyJustPressed(Input.Keys.A) && player.body2.getLinearVelocity().x >= -2) {
 
-            player.body2.applyLinearImpulse(new Vector2(1f,0),player.body2.getWorldCenter(),true);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.A)&& player.body2.getLinearVelocity().x>=-2){
-
-            player.body2.applyLinearImpulse(new Vector2(-1f,0),player.body2.getWorldCenter(),true);
-        }
-
-
-
+              player.body2.applyLinearImpulse(new Vector2(-1f, 0), player.body2.getWorldCenter(), true);
+          }
+          if (Gdx.input.justTouched()&&player.isfire) {
+              if(firetimer>12*dt) {
+                  player.fire();
+                  firetimer = 0;
+              }
+          }
+      }
     }
     public TextureAtlas getAtlas(){
 
@@ -152,13 +177,17 @@ public class PlayScreen implements Screen {
 
         return atlas2;
     }
+    public TextureAtlas getAtlas4(){
+
+        return atlas4;
+    }
 
     public void update(float dt){
         input(dt);
         handle();
         world.step(1/60f,6,2);
         player.update(dt);
-        for(Enemies enemies:worldcreater.getGoobas()) {
+        for(Enemies enemies:worldcreater.getenemy()) {
 
             enemies.update(dt);
             if(enemies.getX()<player.getX()+224/MyGdxGame.ppm)
@@ -169,7 +198,14 @@ public class PlayScreen implements Screen {
             item.update(dt);
 
         }
+        if(Listener.next) {
+            PlayScreen.i++;
+            Listener.next=false;
+            game.setScreen(new Levelscreen(game));
 
+
+        }
+        if(player.currentstate!=Mario.State.Dead)
         camera.position.x=player.body2.getPosition().x;
         camera.update();
         renderer.setView(camera);

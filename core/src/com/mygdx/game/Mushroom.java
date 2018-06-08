@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class Mushroom extends Item {
     public Mushroom(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        setRegion(screen.getAtlas1().findRegion("mushroom"),0,0,16,16);
+        setRegion(screen.getAtlas1().findRegion("firemushroom"),0,0,16,16);
         speed=new Vector2(0.7f,0);
     }
 
@@ -34,6 +34,8 @@ public class Mushroom extends Item {
     public void use(Mario mario) {
 
         des();
+        Hud.addscore(1000);
+        mario.grow();
     }
 
     @Override

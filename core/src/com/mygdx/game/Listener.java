@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import java.lang.Object;
 public class Listener implements ContactListener {
+    public static boolean next;
     @Override
     public void beginContact(Contact contact) {
         Fixture fixA=contact.getFixtureA();
@@ -15,7 +16,7 @@ public class Listener implements ContactListener {
         int Def=fixA.getFilterData().categoryBits|fixB.getFilterData().categoryBits;
         Fixture head;
         Fixture object;
-        if(fixA.getUserData()=="head"||fixB.getUserData()=="head"){
+       /* if(fixA.getUserData()=="head"||fixB.getUserData()=="head"){
             if(fixA.getUserData()=="head") {
                  head=fixA;
                 object=fixB;
@@ -30,10 +31,20 @@ public class Listener implements ContactListener {
              ((Interact) object.getUserData()).onHead();
             }
 
-        }
+        }*/
 
 
         switch (Def){
+            case MyGdxGame.mhbit|MyGdxGame.bbit:
+                if(fixA.getFilterData().categoryBits==MyGdxGame.bbit)
+                    ((Interact)fixA.getUserData()).onHead((Mario) fixB.getUserData());
+                else if(fixB.getFilterData().categoryBits==MyGdxGame.bbit)
+                    ((Interact)fixB.getUserData()).onHead((Mario) fixA.getUserData());
+            case MyGdxGame.mhbit|MyGdxGame.cbit:
+                if(fixA.getFilterData().categoryBits==MyGdxGame.cbit)
+                    ((Interact)fixA.getUserData()).onHead((Mario) fixB.getUserData());
+                else if(fixB.getFilterData().categoryBits==MyGdxGame.cbit)
+                    ((Interact)fixB.getUserData()).onHead((Mario) fixA.getUserData());
             case MyGdxGame.enheadbit|MyGdxGame.mbit:
                 if(fixA.getFilterData().categoryBits==MyGdxGame.enheadbit)
                     ((Enemies)fixA.getUserData()).onhead();
@@ -53,7 +64,10 @@ public class Listener implements ContactListener {
                     ((Enemies)fixB.getUserData()).reverse(true,false);
                 break;
             case MyGdxGame.mbit|MyGdxGame.enbit:
-                Hud.update_life();
+                if(fixA.getFilterData().categoryBits==MyGdxGame.mbit)
+                    ((Mario)fixA.getUserData()).hit();
+                else if(fixB.getFilterData().categoryBits==MyGdxGame.mbit)
+                    ((Mario)fixB.getUserData()).hit();
                 break;
             case MyGdxGame.enbit:
                     ((Enemies)fixA.getUserData()).reverse(true,false);
@@ -66,11 +80,44 @@ public class Listener implements ContactListener {
                     ((Item)fixB.getUserData()).reverse(true,false);
                 break;
             case MyGdxGame.mbit|MyGdxGame.ibit:
-                Hud.addscore(1000);
                 if(fixA.getFilterData().categoryBits==MyGdxGame.ibit)
                     ((Item)fixA.getUserData()).use((Mario) fixB.getUserData());
                 else if(fixB.getFilterData().categoryBits==MyGdxGame.ibit)
                     ((Item)fixB.getUserData()).use((Mario)fixA.getUserData());
+                break;
+            case MyGdxGame.mbit|MyGdxGame.fbit:
+                next=true;
+                break;
+
+            case MyGdxGame.firebit|MyGdxGame.objectbit:
+                if(fixA.getFilterData().categoryBits == MyGdxGame.firebit)
+                    ((Fireball)fixA.getUserData()).setToDestroy();
+                else
+                    ((Fireball)fixB.getUserData()).setToDestroy();
+                break;
+
+
+
+            case MyGdxGame.firebit|MyGdxGame.enbit:
+                System.out.print("jj");
+                if(fixA.getFilterData().categoryBits == MyGdxGame.firebit) {
+                    ((Enemies)fixB.getUserData()).onhead();
+                }
+                else {
+                    ((Enemies)fixA.getUserData()).onhead();
+                }
+                break;
+
+            case MyGdxGame.firebit|MyGdxGame.enheadbit:
+                System.out.print("pj");
+                if(fixA.getFilterData().categoryBits == MyGdxGame.firebit) {
+                    ((Enemies)fixB.getUserData()).onhead();
+
+
+                }
+                else {
+                    ((Enemies)fixA.getUserData()).onhead();
+                }
                 break;
 
                 default:break;

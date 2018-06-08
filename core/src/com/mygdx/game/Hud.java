@@ -16,9 +16,9 @@ import com.badlogic.gdx.graphics.Color;
 public class Hud implements Disposable{
    public Stage stage;
    private Viewport viewport;
-   private static int life;
+   public static int life;
    private float count;
-   private static int score;
+   public static int score;
 
    static Label scorelabel;
    static Label timelabel;
