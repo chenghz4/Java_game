@@ -1,0 +1,47 @@
+
+enemy1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+goba
+  rotate: false
+  xy: 1, 9
+  size: 47, 18
+  orig: 47, 18
+  offset: 0, 0
+  index: -1
+turtle_wings
+  rotate: false
+  xy: 50, 3
+  size: 33, 24
+  orig: 33, 24
+  offset: 0, 0
+  index: -1
+flowers
+  rotate: false
+  xy: 85, 2
+  size: 32, 25
+  orig: 32, 25
+  offset: 0, 0
+  index: -1
+turtle
+  rotate: false
+  xy: 119, 4
+  size: 32, 23
+  orig: 32, 23
+  offset: 0, 0
+  index: -1
+turtle_shell
+  rotate: false
+  xy: 153, 10
+  size: 31, 17
+  orig: 31, 17
+  offset: 0, 0
+  index: -1
+ghost
+  rotate: false
+  xy: 186, 1
+  size: 15, 26
+  orig: 15, 26
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,47 @@
+
+items.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+fireball_middle
+  rotate: false
+  xy: 1, 1
+  size: 17, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: -1
+coins
+  rotate: false
+  xy: 20, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+fireball_big
+  rotate: false
+  xy: 38, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+firemushroom
+  rotate: false
+  xy: 56, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+fireball_small
+  rotate: false
+  xy: 74, 2
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+fireflower
+  rotate: false
+  xy: 92, 1
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: -1
