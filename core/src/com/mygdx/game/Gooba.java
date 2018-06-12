@@ -47,7 +47,7 @@ public class Gooba extends Enemies {
         CircleShape shape=new CircleShape();
         shape.setRadius(7/MyGdxGame.ppm);
         fixtureDef.filter.categoryBits=MyGdxGame.enbit;
-        fixtureDef.filter.maskBits=MyGdxGame.debit|MyGdxGame.cbit|MyGdxGame.bbit|MyGdxGame.objectbit|MyGdxGame.enbit|MyGdxGame.mbit;
+        fixtureDef.filter.maskBits=MyGdxGame.debit|MyGdxGame.cbit|MyGdxGame.bbit|MyGdxGame.objectbit|MyGdxGame.enbit|MyGdxGame.mbit|MyGdxGame.firebit;
 
 
         fixtureDef.shape=shape;
