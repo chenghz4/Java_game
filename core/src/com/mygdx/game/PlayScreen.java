@@ -157,7 +157,7 @@ public class PlayScreen implements Screen {
               player.body2.applyLinearImpulse(new Vector2(-1f, 0), player.body2.getWorldCenter(), true);
           }
           if (Gdx.input.justTouched()&&player.isfire) {
-              if(firetimer>12*dt) {
+              if(firetimer>8*dt) {
                   player.fire();
                   firetimer = 0;
               }

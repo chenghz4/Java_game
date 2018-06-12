@@ -99,7 +99,6 @@ public class Listener implements ContactListener {
 
 
             case MyGdxGame.firebit|MyGdxGame.enbit:
-                System.out.print("jj");
                 if(fixA.getFilterData().categoryBits == MyGdxGame.firebit) {
                     ((Enemies)fixB.getUserData()).onhead();
                 }
@@ -109,7 +108,6 @@ public class Listener implements ContactListener {
                 break;
 
             case MyGdxGame.firebit|MyGdxGame.enheadbit:
-                System.out.print("pj");
                 if(fixA.getFilterData().categoryBits == MyGdxGame.firebit) {
                     ((Enemies)fixB.getUserData()).onhead();
 
