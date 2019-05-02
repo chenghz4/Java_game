@@ -1,4 +1,4 @@
-# Assignment 4:  Super Mario
+# Super Mario
 
 1. The game is side-scrolling. The characters onscreen are viewed from a side-view camera angle. Our game make the onscreen characters move from the right to left side, like a mirror image of the original game. 
  2. The original game has several items. We implement the following: 
